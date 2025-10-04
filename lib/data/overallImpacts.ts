@@ -19,7 +19,8 @@ async function fetchOverallAddonImpacts(): Promise<AddonImpact[]> {
     const name = String(r.addon_name || '').trim();
     if (!name) continue;
     const list = addonToSeverities.get(name) ?? [];
-    list.push(Number((r as any).severity ?? 1));
+    // Preserve 0 (Safe). Use 0 when missing instead of 1.
+    list.push(Number((r as any).severity ?? 0));
     addonToSeverities.set(name, list);
   }
 

@@ -13,11 +13,12 @@ export async function OverallInfographic() {
     if (error) {
       return <div className="mt-4 text-slate-400">Failed to load infographic.</div>;
     }
-    const counts = { low: 0, medium: 0, high: 0, dead: 0 } as Record<string, number>;
+    const counts = { safe: 0, low: 0, medium: 0, high: 0, dead: 0 } as Record<string, number>;
     const agg = new Map<string, number[]>();
     for (const r of data || []) {
-      const sev = Number((r as any).severity || 1);
-      if (sev <= 2) counts.low++;
+      const sev = Number((r as any).severity ?? 0);
+      if (sev === 0) counts.safe++;
+      else if (sev <= 2) counts.low++;
       else if (sev === 3) counts.medium++;
       else if (sev === 4) counts.high++;
       else counts.dead++;
@@ -28,19 +29,22 @@ export async function OverallInfographic() {
         agg.set(name, arr);
       }
     }
-    const total = counts.low + counts.medium + counts.high + counts.dead;
+    const total = counts.safe + counts.low + counts.medium + counts.high + counts.dead;
     const bar = (label: string, value: number, color: string, y: number) => {
       const width = total ? Math.max(2, (value / total) * 320) : 2;
-      return `<g><text x="10" y="${y - 10}" fill="#cbd5e1" font-size="12" font-family="ui-sans-serif">${label} (${value})</text><rect x="10" y="${y}" rx="4" ry="4" width="${width}" height="16" fill="${color}" /></g>`;
+      const barHeight = 18;
+      const labelOffset = 12;
+      return `<g><text x="10" y="${y - labelOffset}" fill="#cbd5e1" font-size="12" font-family="ui-sans-serif">${label} (${value})</text><rect x="10" y="${y}" rx="6" ry="6" width="${width}" height="${barHeight}" fill="${color}" /></g>`;
     };
     cachedSvg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="360" height="180" viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg">
+<svg width="360" height="260" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
   <rect width="100%" height="100%" fill="#0b1020" />
-  <text x="10" y="24" fill="#e2e8f0" font-size="14" font-family="ui-sans-serif">Overall Addon Impact</text>
-  ${bar('Low', counts.low, '#fde047', 60)}
-  ${bar('Medium', counts.medium, '#f59e0b', 95)}
-  ${bar('High', counts.high, '#f97316', 130)}
-  ${bar('Disabled', counts.dead, '#ef4444', 165)}
+  <text x="10" y="30" fill="#e2e8f0" font-size="14" font-family="ui-sans-serif">Overall Addon Impact</text>
+  ${bar('Safe', counts.safe, '#22c55e', 60)}
+  ${bar('Low', counts.low, '#fde047', 100)}
+  ${bar('Medium', counts.medium, '#f59e0b', 140)}
+  ${bar('High', counts.high, '#f97316', 180)}
+  ${bar('Disabled', counts.dead, '#ef4444', 220)}
 </svg>`;
     cachedAddons = Array.from(agg.entries()).map(([name, arr]) => ({ name, avg: arr.reduce((a, b) => a + b, 0) / arr.length }))
       .sort((a, b) => b.avg - a.avg)

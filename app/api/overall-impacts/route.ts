@@ -16,7 +16,8 @@ export async function GET() {
   const agg = new Map<string, number[]>();
   for (const r of rows as any[]) {
     const list = agg.get(r.addon_name) ?? [];
-    list.push(Number(r.severity || 1));
+    // Preserve 0 (Safe). Use 0 as fallback only if null/undefined.
+    list.push(Number((r as any).severity ?? 0));
     agg.set(r.addon_name, list);
   }
   const impacts = Array.from(agg.entries()).map(([addon_name, severities]) => ({
