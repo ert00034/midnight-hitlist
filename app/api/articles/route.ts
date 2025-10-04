@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/serviceRole';
 import { z } from 'zod';
@@ -46,8 +47,9 @@ export async function POST(req: NextRequest) {
   const $ = cheerio.load(html);
   const title = $('meta[property="og:title"]').attr('content') || $('title').text() || url;
   const description = $('meta[name="description"]').attr('content') || $('meta[property="og:description"]').attr('content') || '';
-  const icon = $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href') || '';
-  const favicon = icon.startsWith('http') ? icon : new URL(icon || '/favicon.ico', url).toString();
+  const icon = $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href') || $('link[rel="apple-touch-icon"]').attr('href') || '';
+  const faviconUrl = icon ? (icon.startsWith('http') ? icon : new URL(icon, url).toString()) : new URL('/favicon.ico', url).toString();
+  const favicon = faviconUrl;
 
   // AI classify relevance and severity
   let severity: number | null = null;
@@ -72,6 +74,8 @@ export async function POST(req: NextRequest) {
       await supabase.from('article_addon_impacts').upsert(rows);
     }
   } catch {}
+  // Invalidate cached overall impacts after adding an article
+  try { revalidateTag('overall-impacts'); } catch {}
   return NextResponse.json({ article: data });
 }
 
@@ -83,6 +87,7 @@ export async function DELETE(req: NextRequest) {
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
   const { error } = await supabase.from('articles').delete().eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try { revalidateTag('overall-impacts'); } catch {}
   return NextResponse.json({ ok: true });
 }
 

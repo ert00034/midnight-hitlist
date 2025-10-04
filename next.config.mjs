@@ -8,7 +8,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'wow.zamimg.com' },
-      { protocol: 'https', hostname: 'www.wowhead.com' }
+      { protocol: 'https', hostname: 'www.wowhead.com' },
+      { protocol: 'https', hostname: '**' }
     ]
   }
 };

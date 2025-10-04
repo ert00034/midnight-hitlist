@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'rip addons',
+  title: 'RIP Addons',
   description: 'Track WoW addon impacts from Midnight API changes, with Wowhead articles.',
 };
 

@@ -7,7 +7,7 @@ export default function HomePage() {
     <div className="pb-16">
       <Navbar />
       <header className="py-10">
-        <h1 className="text-4xl font-semibold tracking-tight">rip addons</h1>
+        <h1 className="text-4xl font-semibold tracking-tight">RIP Addons</h1>
         <p className="mt-2 text-slate-300">A curated list of Wowhead articles and addons impacted by API/addon changes for the Midnight update.</p>
       </header>
       <section className="grid gap-6 md:grid-cols-2">

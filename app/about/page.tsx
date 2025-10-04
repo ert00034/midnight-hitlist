@@ -8,7 +8,7 @@ export default function AboutPage() {
       <main className="py-10">
         <h1 className="text-3xl font-semibold">About</h1>
         <p className="mt-2 text-slate-300">
-          rip addons is a lightweight tracker for World of Warcraft addon impacts from the Midnight API/addon changes.
+          RIP Addons is a lightweight tracker for World of Warcraft addon impacts from the Midnight API/addon changes.
           It curates Wowhead articles and surfaces addon impact severity so authors and players can quickly assess risk.
         </p>
 

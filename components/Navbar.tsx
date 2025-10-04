@@ -1,17 +1,23 @@
+"use client";
 import Link from 'next/link';
 
 export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 -mx-4 mb-4 border-b border-white/10 bg-[#0b1020]/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-semibold tracking-wide">
-          rip addons
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-lg font-semibold tracking-wide text-slate-100 no-underline ring-1 ring-transparent transition hover:bg-white/5 hover:text-slate-100 hover:no-underline hover:ring-white/15 hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 active:translate-y-px"
+        >
+          <span aria-hidden="true">💀</span>
+          <span>RIP Addons</span>
         </Link>
         <div className="flex items-center gap-6">
-          <Link href="/articles">Articles</Link>
-          <Link href="/addons">Addons</Link>
-          <Link href="/about">About</Link>
-          <Link href="/admin">Admin</Link>
+          <Link href="/articles" className="no-underline hover:no-underline">Articles</Link>
+          <Link href="/addons" className="no-underline hover:no-underline">Addons</Link>
+          <Link href="/suggest" className="no-underline hover:no-underline">Suggest</Link>
+          <Link href="/about" className="no-underline hover:no-underline">About</Link>
+          <Link href="/admin" className="no-underline hover:no-underline">Admin</Link>
         </div>
       </div>
     </nav>

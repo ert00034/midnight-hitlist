@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { createServiceClient } from '@/lib/supabase/serviceRole';
 import { createClient } from '@/lib/supabase/server';
@@ -7,7 +8,7 @@ import { cookies } from 'next/headers';
 const bodySchema = z.object({
   article_id: z.string().uuid(),
   addon_name: z.string().min(1),
-  severity: z.number().int().min(1).max(5),
+  severity: z.number().int().min(0).max(5),
 });
 
 export async function POST(req: NextRequest) {
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
     severity: parsed.data.severity,
   });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try { revalidateTag('overall-impacts'); } catch {}
 
   const pub = createClient();
   const { data } = await pub.from('article_addon_impacts')
@@ -42,6 +44,7 @@ export async function DELETE(req: NextRequest) {
   const svc = createServiceClient();
   const { error } = await svc.from('article_addon_impacts').delete().eq('article_id', article_id).eq('addon_name', addon_name);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try { revalidateTag('overall-impacts'); } catch {}
   const pub = createClient();
   const { data } = await pub.from('article_addon_impacts').select('addon_name, severity').eq('article_id', article_id);
   return NextResponse.json({ impacts: data ?? [] });

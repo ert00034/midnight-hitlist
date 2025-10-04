@@ -1,6 +1,7 @@
 type Props = { level: number };
 
 const levelToLabel: Record<number, string> = {
+  0: 'Safe',
   1: 'Low',
   2: 'Moderate',
   3: 'Notable',
@@ -9,8 +10,9 @@ const levelToLabel: Record<number, string> = {
 };
 
 export function SeverityPill({ level }: Props) {
-  const clamped = Math.min(5, Math.max(1, Math.round(level)));
+  const clamped = Math.min(5, Math.max(0, Math.round(level)));
   const bgMap: Record<number, string> = {
+    0: 'bg-green-500 text-white',
     1: 'bg-yellow-200 text-slate-900',
     2: 'bg-yellow-300 text-slate-900',
     3: 'bg-orange-400 text-white',

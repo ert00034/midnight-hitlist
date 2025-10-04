@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { createServiceClient } from '@/lib/supabase/serviceRole';
 
@@ -15,6 +16,7 @@ export async function POST() {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try { revalidateTag('overall-impacts'); } catch {}
   return NextResponse.json({ article: data });
 }
 

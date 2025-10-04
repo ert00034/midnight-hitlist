@@ -36,12 +36,32 @@ export async function suggestAddonImpactsFromText(text: string): Promise<Suggest
     response_format: { type: 'json_object' as any }
   });
   const content = resp.choices[0]?.message?.content || '[]';
-  let arr: any = [];
+  let parsed: any;
   try {
-    arr = JSON.parse(content);
+    parsed = JSON.parse(content);
   } catch {
     return [];
   }
+
+  // Accept multiple shapes returned by JSON mode:
+  // - Direct array
+  // - { suggestions: [...] }
+  // - { items: [...] }
+  // - { anyKey: [...] }
+  // - Single object (coerce to one-element array)
+  let arr: any[] = [];
+  if (Array.isArray(parsed)) {
+    arr = parsed;
+  } else if (parsed && typeof parsed === 'object') {
+    if (Array.isArray(parsed.suggestions)) arr = parsed.suggestions;
+    else if (Array.isArray(parsed.items)) arr = parsed.items;
+    else {
+      const firstArray = Object.values(parsed).find((v: any) => Array.isArray(v));
+      if (Array.isArray(firstArray)) arr = firstArray as any[];
+      else if (parsed.addon_name) arr = [parsed];
+    }
+  }
+
   if (!Array.isArray(arr)) return [];
   return arr
     .map((r) => ({

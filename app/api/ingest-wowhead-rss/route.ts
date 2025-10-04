@@ -5,6 +5,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { classifyArticle } from '@/lib/ai/classifier';
 import * as cheerio from 'cheerio';
 import { extractWowheadNewsLinks } from '@/lib/scrape/wowhead';
+import { revalidateTag } from 'next/cache';
 
 export async function POST(req: NextRequest) {
   const isAdmin = cookies().get('mh_admin')?.value === '1';
@@ -165,6 +166,7 @@ export async function POST(req: NextRequest) {
   });
   const upsertMs = Date.now() - t2;
 
+  try { revalidateTag('overall-impacts'); } catch {}
   return NextResponse.json({ count: inserted.length, articles: inserted, errors, timings: { totalMs: Date.now() - t0, classifyMs, upsertMs } });
 }
 

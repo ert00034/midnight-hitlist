@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
 
 let cachedSvg: string | null = null;
 let cachedAt = 0;
@@ -46,10 +47,10 @@ export async function OverallInfographic() {
       .slice(0, 12);
     cachedAt = now;
   }
-  const category = (avg: number) => avg <= 2 ? 'low' : avg >= 5 ? 'disabled' : avg >= 4 ? 'high' : 'medium';
+  const category = (avg: number) => avg <= 0.49 ? 'safe' : avg <= 1.49 ? 'low' : avg >= 4.5 ? 'critical' : avg >= 3.5 ? 'high' : avg >= 2.5 ? 'notable' : 'moderate';
   const badge = (avg: number) => {
     const c = category(avg);
-    const cls = c === 'low' ? 'bg-yellow-200 text-slate-900' : c === 'medium' ? 'bg-orange-400 text-white' : c === 'high' ? 'bg-orange-500 text-white' : 'bg-red-500 text-white';
+    const cls = c === 'safe' ? 'bg-green-500 text-white' : c === 'low' ? 'bg-yellow-200 text-slate-900' : c === 'moderate' ? 'bg-yellow-300 text-slate-900' : c === 'notable' ? 'bg-orange-400 text-white' : c === 'high' ? 'bg-orange-500 text-white' : 'bg-red-500 text-white';
     const label = c.charAt(0).toUpperCase() + c.slice(1);
     return <span className={`rounded px-2 py-0.5 text-xs ${cls}`}>{label}</span>;
   };
@@ -59,11 +60,13 @@ export async function OverallInfographic() {
       <div className="grid items-start gap-6 md:grid-cols-2">
         <div className="p-2" dangerouslySetInnerHTML={{ __html: cachedSvg! }} />
         <div className="max-h-[180px] overflow-auto">
-          <div className="text-sm text-slate-300 mb-3">Top addons (overall)</div>
+          <div className="text-sm text-slate-300 mb-3">Most impacted addons</div>
           <ul className="space-y-1.5">
             {cachedAddons.map((a) => (
               <li key={a.name} className="flex items-center justify-between">
-                <span className="truncate pr-2">{a.name}</span>
+                <Link href={`/addons/${encodeURIComponent(a.name)}`} className="truncate pr-2 hover:underline">
+                  {a.name}
+                </Link>
                 {badge(a.avg)}
               </li>
             ))}
