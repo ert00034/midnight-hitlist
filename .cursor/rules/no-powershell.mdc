@@ -1,0 +1,22 @@
+---
+alwaysApply: true
+---
+# Terminal Command Execution Policy
+
+This workspace must not execute terminal commands directly. The user's allowlist blocks PowerShell; executing commands from the assistant can invalidate their Cursor allowlist.
+
+- Do not invoke any terminal/shell commands from the assistant.
+- Do not use the tool that runs shell/terminal commands in this workspace.
+- Never execute PowerShell commands (or cmd.exe), and never background any process.
+- When commands are helpful, present them as instructions for the user to run manually, using fenced code blocks, and clearly label them as user-run commands. Do not run them yourself.
+- Prefer cross-platform command examples where possible; provide Windows variants when relevant, but still do not execute them.
+- Use read-only tools (e.g., search and file read/edit tools) to make changes, not shell commands.
+
+Example (instruction only; do not execute):
+
+```bash
+# User-run example
+npm install
+npm run dev
+```
+

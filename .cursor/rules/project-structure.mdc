@@ -1,0 +1,55 @@
+---
+alwaysApply: true
+---
+# Project Structure and Navigation
+
+This project is a Next.js 14 App Router application with Supabase and Tailwind.
+
+## Entry points and layout
+- Root layout: [app/layout.tsx](mdc:app/layout.tsx)
+- Global styles: [app/globals.css](mdc:app/globals.css)
+- Home: [app/page.tsx](mdc:app/page.tsx)
+
+## Routes (App Router)
+- Articles page: [app/articles/page.tsx](mdc:app/articles/page.tsx)
+- Addons page: [app/addons/page.tsx](mdc:app/addons/page.tsx)
+- Admin page: [app/admin/page.tsx](mdc:app/admin/page.tsx)
+
+## API routes (server)
+- Articles CRUD + metadata/AI classify: [app/api/articles/route.ts](mdc:app/api/articles/route.ts)
+- Article addon impacts CRUD: [app/api/article-impacts/route.ts](mdc:app/api/article-impacts/route.ts)
+- Overall impacts aggregation: [app/api/overall-impacts/route.ts](mdc:app/api/overall-impacts/route.ts)
+- Admin session (cookie) helpers: [app/api/admin/login/route.ts](mdc:app/api/admin/login/route.ts), [app/api/admin/logout/route.ts](mdc:app/api/admin/logout/route.ts), [app/api/admin/me/route.ts](mdc:app/api/admin/me/route.ts)
+- AI suggestions: [app/api/suggest-articles/route.ts](mdc:app/api/suggest-articles/route.ts)
+
+## Components
+- Navbar: [components/Navbar.tsx](mdc:components/Navbar.tsx)
+- Severity pill: [components/SeverityPill.tsx](mdc:components/SeverityPill.tsx)
+- Addon tag: [components/AddonTag.tsx](mdc:components/AddonTag.tsx)
+- Article list/card: [components/articles/ArticleList.tsx](mdc:components/articles/ArticleList.tsx), [components/articles/ArticleCard.tsx](mdc:components/articles/ArticleCard.tsx)
+- Addon impact list: [components/addons/OverallAddonImpact.tsx](mdc:components/addons/OverallAddonImpact.tsx)
+- Admin UI: [components/admin/AdminArticleManager.tsx](mdc:components/admin/AdminArticleManager.tsx), [components/admin/AdminLogin.tsx](mdc:components/admin/AdminLogin.tsx)
+
+## Data layer
+- Supabase server client: [lib/supabase/server.ts](mdc:lib/supabase/server.ts)
+- Supabase service-role client: [lib/supabase/serviceRole.ts](mdc:lib/supabase/serviceRole.ts)
+- Browser client (if needed): [lib/supabase/client.ts](mdc:lib/supabase/client.ts)
+- AI classifier wrapper: [lib/ai/classifier.ts](mdc:lib/ai/classifier.ts)
+
+## Database schema and policies
+- SQL migration: [supabase/migrations/0001_init.sql](mdc:supabase/migrations/0001_init.sql)
+- Tables: `articles`, `addons`, `article_addon_impacts`
+- RLS: public read; service-role writes (admin actions via API routes)
+
+## Configuration
+- Tailwind config: [tailwind.config.ts](mdc:tailwind.config.ts)
+- Next config: [next.config.mjs](mdc:next.config.mjs)
+- TypeScript config: [tsconfig.json](mdc:tsconfig.json)
+- Readme: [README.md](mdc:README.md)
+
+## Conventions
+- New pages go under `app/<route>/page.tsx`.
+- New server endpoints go under `app/api/<name>/route.ts`.
+- Shared logic belongs in `lib/`, UI in `components/`.
+- DB reads in server components prefer [lib/supabase/server.ts](mdc:lib/supabase/server.ts); admin writes use [lib/supabase/serviceRole.ts](mdc:lib/supabase/serviceRole.ts) from server-only code.
+

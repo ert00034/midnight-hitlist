@@ -1,0 +1,30 @@
+---
+alwaysApply: true
+---
+# Design and UX Guidelines
+
+Follow a WoW-adjacent aesthetic without infringing on copyrights or trademarks.
+
+## Visual style
+- Use a dark, arcane-inspired background with subtle radial gradients (see `bg-arcane-gradient`).
+- Primary palette: midnight blues (`midnight.*` in Tailwind config), accents in cyan/indigo.
+- Severity uses a yellow→red gradient mapping levels 1–5.
+- Avoid official game logos, fonts, or copyrighted art. Use generic shapes, gradients, and color.
+
+## Components
+- Severity pill (1–5): low=yellow, critical=red. Prefer labels: Low, Moderate, Notable, High, Critical.
+- Addon tags are compact chips with severity color.
+- Cards have soft borders (`ring-white/10`) and hover glow (`shadow-glow`).
+
+## Layout
+- Content max width is 6xl with generous spacing on sections.
+- Sticky top navbar with transparent blur background.
+
+## Accessibility
+- Maintain sufficient contrast in dark mode.
+- Prefer semantic HTML and keyboard-focusable elements.
+
+## Content and legal
+- Show only links and minimal metadata for Wowhead articles; do not copy full content.
+- Attribute via outbound links; open in new tabs for external links.
+
