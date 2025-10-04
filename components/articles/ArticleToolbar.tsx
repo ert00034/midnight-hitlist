@@ -21,7 +21,7 @@ export function ArticleToolbar() {
   return (
     <div className="mt-4 flex items-center justify-between">
       <div className="text-sm text-slate-300">
-        Showing: {recommendedOnly ? 'Recommended' : 'All (includes non-recommended)'}
+        Showing: {recommendedOnly ? 'Recommended' : 'All'}
       </div>
       <button
         onClick={toggle}

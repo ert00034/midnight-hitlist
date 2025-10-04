@@ -74,3 +74,52 @@ Visit `http://localhost:3000`.
 - Admin: add/delete links, request AI suggestions.
 
 
+---
+
+## Public impacted addons feed
+
+Endpoint: `GET /api/impacted`
+
+Response schema:
+
+```json
+{
+  "version": "YYYY-MM-DD",
+  "items": [
+    {
+      "slug": "dbmcore",
+      "severity": "high",
+      "note": "Update required",
+      "link": "https://ripaddons.com/article/..."
+    }
+  ]
+}
+```
+
+Rules
+- `slug`: normalized addon folder name: lowercase and remove non-alphanumerics. Examples: `DBM-Core` → `dbmcore`, `WeakAuras` → `weakauras`.
+- `severity`: one of `critical | high | medium | low | unknown`. Site colors/labels map to these levels: red→critical, orange→high, yellow→medium, green→low. Numeric 0–1→low, 2→medium, 3–4→high, 5→critical.
+- `note` and `link`: optional short reason and canonical article URL.
+- `version`: today’s UTC date string unless data versioning is added later.
+- Items aggregate per addon slug across articles; the highest severity wins. Note/link prefer the most informative entry.
+- Items are sorted alphabetically by slug.
+
+Caching
+- CORS: `Access-Control-Allow-Origin: *`
+- Cache: `Cache-Control: public, s-maxage=3600, stale-while-revalidate=86400`
+- ETag: stable SHA-256 of the JSON body; `If-None-Match` yields `304 Not Modified` when matched.
+
+Windows PowerShell-safe cURL
+
+```powershell
+# User-run: fetch impacted feed
+curl.exe -sS -X GET http://localhost:3000/api/impacted
+```
+
+macOS/Linux cURL
+
+```bash
+curl -sS -X GET http://localhost:3000/api/impacted
+```
+
+
