@@ -12,12 +12,17 @@ export type Classification = {
 };
 
 export async function classifyArticle(text: string): Promise<Classification> {
-  if (!process.env.OPENAI_API_KEY) {
-    return { related: false, reason: 'No OPENAI_API_KEY configured', severity: 1 };
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    return { related: false, reason: 'No OPENROUTER_API_KEY configured', severity: 1 };
   }
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const client = new OpenAI({
+    apiKey,
+    baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+  });
+  const model = process.env.OPENROUTER_MODEL || 'openrouter/auto';
   const resp = await client.chat.completions.create({
-    model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+    model,
     temperature: 0,
     messages: [
       { role: 'system', content: systemPrompt },

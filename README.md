@@ -10,7 +10,7 @@ Track Wowhead articles and addon impact severity related to the Midnight API/add
 ### Tech
 - Next.js 14 App Router, TypeScript, Tailwind CSS
 - Supabase Postgres + RLS for data storage
-- Optional OpenAI for classification (set `OPENAI_API_KEY`)
+- Optional OpenRouter for classification (set `OPENROUTER_API_KEY`)
 
 ---
 
@@ -29,10 +29,11 @@ Create `.env.local`:
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-OPENAI_API_KEY=your_key_optional
-OPENAI_MODEL=gpt-4o-mini
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key   # required for admin writes
 ADMIN_PASSWORD=choose_a_strong_password           # for simple cookie-based admin login
+OPENROUTER_API_KEY=your_key_optional
+OPENROUTER_MODEL=openrouter/auto
+OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
 ```
 
 ### 4) Install and run
@@ -53,8 +54,11 @@ Visit `http://localhost:3000`.
 3. Set Environment Variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `OPENAI_API_KEY` (optional)
-   - `OPENAI_MODEL` (optional)
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `ADMIN_PASSWORD`
+   - `OPENROUTER_API_KEY` (optional)
+   - `OPENROUTER_MODEL` (optional)
+   - `OPENROUTER_BASE_URL` (optional)
 4. Build & deploy. Add the SQL schema to your Supabase project.
 
 ### Notes

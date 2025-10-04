@@ -32,16 +32,22 @@ alter table public.addons enable row level security;
 alter table public.article_addon_impacts enable row level security;
 
 -- Public can read
-create policy if not exists "Public read articles" on public.articles for select using (true);
-create policy if not exists "Public read impacts" on public.article_addon_impacts for select using (true);
-create policy if not exists "Public read addons" on public.addons for select using (true);
+drop policy if exists "Public read articles" on public.articles;
+create policy "Public read articles" on public.articles for select using (true);
+drop policy if exists "Public read impacts" on public.article_addon_impacts;
+create policy "Public read impacts" on public.article_addon_impacts for select using (true);
+drop policy if exists "Public read addons" on public.addons;
+create policy "Public read addons" on public.addons for select using (true);
 
 -- Admin service role (via Supabase service_key) can write
-create policy if not exists "Service role write articles" on public.articles
-  for all using (auth.jwt() ->> 'role' = 'service_role') with check (auth.jwt() ->> 'role' = 'service_role');
-create policy if not exists "Service role write impacts" on public.article_addon_impacts
-  for all using (auth.jwt() ->> 'role' = 'service_role') with check (auth.jwt() ->> 'role' = 'service_role');
-create policy if not exists "Service role write addons" on public.addons
-  for all using (auth.jwt() ->> 'role' = 'service_role') with check (auth.jwt() ->> 'role' = 'service_role');
+drop policy if exists "Service role write articles" on public.articles;
+create policy "Service role write articles" on public.articles
+  for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+drop policy if exists "Service role write impacts" on public.article_addon_impacts;
+create policy "Service role write impacts" on public.article_addon_impacts
+  for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+drop policy if exists "Service role write addons" on public.addons;
+create policy "Service role write addons" on public.addons
+  for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
 
 
