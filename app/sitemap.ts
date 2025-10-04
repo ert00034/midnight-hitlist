@@ -7,7 +7,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createClient();
   const { data } = await supabase
     .from('article_addon_impacts')
-    .select('addon_name', { distinct: true });
+    .select('addon_name');
 
   const addonNames = Array.from(new Set((data || []).map((row: any) => row.addon_name).filter(Boolean)));
   const now = new Date();
