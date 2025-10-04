@@ -1,4 +1,4 @@
-## Midnight Hitlist
+## rip addons
 
 Track Wowhead articles and addon impact severity related to the Midnight API/addon changes. Built with Next.js (App Router), Tailwind, and Supabase. Hosts on Vercel.
 
