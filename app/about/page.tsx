@@ -30,6 +30,32 @@ export default function AboutPage() {
           </section>
 
           <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
+            <h2 className="text-xl font-medium">WoW Addon: Check your installed addons</h2>
+            <p className="mt-3 text-slate-400">
+              Install the in-game addon to scan your installed addons and see which are impacted.
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-400">
+              <li>
+                Get the addon from{' '}
+                <Link
+                  href="https://github.com/ert00034/rip-addons-addon"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sky-300 hover:underline"
+                >
+                  github.com/ert00034/rip-addons-addon
+                </Link>.
+              </li>
+              <li>
+                Extract to your WoW folder so you have <code>Interface/AddOns/RipAddons/</code>.
+              </li>
+              <li>
+                In-game, run <code>/ripaddons scan</code> (or use the keybinding: RIP Addons: Toggle).
+              </li>
+            </ul>
+          </section>
+
+          <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
             <h2 className="text-xl font-medium">Tech & data</h2>
             <p className="mt-3 text-slate-400">
               Built with Next.js 14, TypeScript, Tailwind, and Supabase. Public read access; admin writes via service role on server routes.
