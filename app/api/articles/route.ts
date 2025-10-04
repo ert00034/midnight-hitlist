@@ -5,6 +5,8 @@ import { z } from 'zod';
 import * as cheerio from 'cheerio';
 import { classifyArticle } from '@/lib/ai/classifier';
 import { cookies } from 'next/headers';
+import { suggestAddonImpactsFromText } from '@/lib/ai/impacts';
+import { summarizeArticleText } from '@/lib/ai/summarizer';
 
 export async function GET() {
   const supabase = createClient();
@@ -23,7 +25,7 @@ export async function GET() {
     created_at: row.created_at,
     impacts: (row.article_addon_impacts ?? []).map((i: any) => ({ addon_name: i.addon_name, severity: i.severity }))
   }));
-  return NextResponse.json({ articles });
+  return NextResponse.json({ articles, count: articles.length });
 }
 
 const bodySchema = z.object({ url: z.string().url() });
@@ -49,13 +51,27 @@ export async function POST(req: NextRequest) {
 
   // AI classify relevance and severity
   let severity: number | null = null;
+  let summaryText: string | null = null;
   try {
     const cls = await classifyArticle(`${title}\n\n${description}`);
     severity = cls.related ? cls.severity : 1;
   } catch {}
 
-  const { data, error } = await supabase.from('articles').insert({ url, title, summary: description, favicon, severity }).select('*').single();
+  try {
+    summaryText = await summarizeArticleText(`${title}\n\n${description}`);
+  } catch {}
+
+  const { data, error } = await supabase.from('articles').insert({ url, title, summary: summaryText || description, favicon, severity }).select('*').single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Suggest addon impacts (best-effort)
+  try {
+    const suggestions = await suggestAddonImpactsFromText(`${title}\n\n${description}`);
+    if (suggestions.length) {
+      const rows = suggestions.map((s) => ({ article_id: data.id, addon_name: s.addon_name, severity: s.severity }));
+      await supabase.from('article_addon_impacts').upsert(rows);
+    }
+  } catch {}
   return NextResponse.json({ article: data });
 }
 

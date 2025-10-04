@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
+import { OverallInfographic } from '@/components/home/OverallInfographic';
 
 export default function HomePage() {
   return (
@@ -19,6 +20,9 @@ export default function HomePage() {
           <p className="mt-2 text-slate-400">See overall addon impact and severity rollups.</p>
         </Link>
       </section>
+      <div className="mt-8">
+        <OverallInfographic />
+      </div>
     </div>
   );
 }

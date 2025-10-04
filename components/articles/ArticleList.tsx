@@ -1,12 +1,24 @@
 import { createClient } from '@/lib/supabase/server';
 import { ArticleCard, type Article } from './ArticleCard';
+import { headers } from 'next/headers';
 
 export async function ArticleList() {
   const supabase = createClient();
-  const { data, error } = await supabase
+  const h = headers();
+  const recommendedOnly = (h.get('x-invoke-path') || '') === '' ? true : true;
+  // Read query param from header URL (App Router limitation workaround)
+  const url = h.get('referer') || '';
+  const qs = url.split('?')[1] || '';
+  const params = new URLSearchParams(qs);
+  const showAll = params.get('recommended') === '0';
+  let query = supabase
     .from('articles')
     .select('*, article_addon_impacts(addon_name, severity)')
     .order('created_at', { ascending: false });
+  if (!showAll) {
+    query = query.not('severity', 'is', null).gte('severity', 2);
+  }
+  const { data, error } = await query;
 
   if (error) {
     return <div className="mt-6 text-red-300">Failed to load articles.</div>;

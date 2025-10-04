@@ -1,0 +1,42 @@
+---
+alwaysApply: true
+---
+# Windows PowerShell-safe cURL Commands
+
+When sharing user-run HTTP commands on Windows, always provide PowerShell-safe variants. Avoid pitfalls that break requests.
+
+## Rules (PowerShell)
+- Use `curl.exe` explicitly (PowerShell aliases `curl` to Invoke-WebRequest which interprets flags differently).
+- Never wrap URLs in backticks. Use plain `http://localhost:3000/...`.
+- For JSON bodies: include header `-H "Content-Type: application/json"` and escape quotes: `-d "{\"key\":\"value\"}"`.
+- Cookies: `-c cookies.txt` to save, `-b cookies.txt` to send.
+- Keep commands on a single line; do not use PowerShell backticks for line continuation in shared snippets.
+
+## Rules (Bash/macOS/Linux)
+- Use `curl` normally; JSON with single quotes: `-d '{"key":"value"}'`.
+
+## Project Examples
+
+PowerShell (Windows):
+```powershell
+# Login (replace <ADMIN_PASSWORD>)
+curl.exe -sS -c cookies.txt -X POST -H "Content-Type: application/json" -d "{\"password\":\"<ADMIN_PASSWORD>\"}" http://localhost:3000/api/admin/login
+
+# Seed a test article
+curl.exe -sS -b cookies.txt -X POST http://localhost:3000/api/admin/seed
+
+# Verify articles
+curl.exe -sS -X GET http://localhost:3000/api/articles
+
+# Ingest Wowhead
+curl.exe -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead
+```
+
+Bash/macOS/Linux:
+```bash
+curl -sS -c cookies.txt -X POST -H "Content-Type: application/json" -d '{"password":"<ADMIN_PASSWORD>"}' http://localhost:3000/api/admin/login
+curl -sS -b cookies.txt -X POST http://localhost:3000/api/admin/seed
+curl -sS -X GET http://localhost:3000/api/articles
+curl -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead
+```
+

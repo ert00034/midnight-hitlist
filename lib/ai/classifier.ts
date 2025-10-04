@@ -20,7 +20,7 @@ export async function classifyArticle(text: string): Promise<Classification> {
     apiKey,
     baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
   });
-  const model = process.env.OPENROUTER_MODEL || 'openrouter/auto';
+  const model = process.env.OPENROUTER_MODEL || 'gpt-5-mini';
   const resp = await client.chat.completions.create({
     model,
     temperature: 0,

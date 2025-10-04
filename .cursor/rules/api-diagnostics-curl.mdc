@@ -1,0 +1,35 @@
+---
+alwaysApply: true
+---
+# API Diagnostics via cURL (User-run)
+
+When debugging APIs or needing live JSON to proceed, do NOT ask the user to open URLs in a browser. Instead, provide user-run cURL commands and ask them to paste the JSON output back.
+
+Rules:
+- Always share commands as instructions to run manually. Do not execute them.
+- Prefer concise, copy-pastable cURL with: -sS, explicit -X method, and necessary headers.
+- For POST JSON, include -H "Content-Type: application/json" and -d '{...}'.
+- For admin-protected endpoints, show a cookie-jar flow so a single terminal session can authenticate then call the endpoint.
+- Ask the user to paste the raw JSON response in a fenced code block.
+
+Examples (instruction only; do not execute):
+
+```bash
+# User-run: check admin debug
+curl -sS -X GET http://localhost:3000/api/admin/debug
+```
+
+```bash
+# User-run: log in as admin, save cookie, then call debug
+# Replace <ADMIN_PASSWORD> with your value
+curl -sS -c cookies.txt -X POST -H "Content-Type: application/json" -d '{"password":"<ADMIN_PASSWORD>"}' http://localhost:3000/api/admin/login
+curl -sS -b cookies.txt -X GET http://localhost:3000/api/admin/debug
+```
+
+```bash
+# User-run: ingest Wowhead (admin-only), then fetch articles
+curl -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead
+curl -sS -X GET http://localhost:3000/api/articles
+```
+
+If the project is deployed, replace http://localhost:3000 with the Vercel URL. Always request that the user paste the JSON output so you can incorporate it directly into your response and next steps.
