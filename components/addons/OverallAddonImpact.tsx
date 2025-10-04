@@ -38,19 +38,18 @@ export function OverallAddonImpact() {
       {impacts.map((i) => (
         <div key={i.addon_name} className="flex items-center justify-between rounded-lg bg-slate-900/40 p-4 ring-1 ring-white/10">
           <span className="font-medium">{i.addon_name}</span>
-          <div className="h-2 w-40 rounded bg-yellow-200">
-            <div
-              className="h-2 rounded"
-              style={{
-                width: `${Math.min(100, Math.max(0, (i.severity / 5) * 100))}%`,
-                background: 'linear-gradient(90deg, #fde047, #ef4444)'
-              }}
-            />
-          </div>
+          <SeverityLabel severity={i.severity} />
         </div>
       ))}
     </div>
   );
+}
+
+function SeverityLabel({ severity }: { severity: number }) {
+  const label = severity >= 5 ? 'disabled' : severity >= 4 ? 'high' : severity === 3 ? 'medium' : 'low';
+  const cls = label === 'low' ? 'bg-yellow-200 text-slate-900' : label === 'medium' ? 'bg-orange-400 text-white' : label === 'high' ? 'bg-orange-500 text-white' : 'bg-red-500 text-white';
+  const text = label.charAt(0).toUpperCase() + label.slice(1);
+  return <span className={`rounded px-2 py-0.5 text-xs ${cls}`}>{text}</span>;
 }
 
 

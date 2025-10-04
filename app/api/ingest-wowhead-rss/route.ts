@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/serviceRole';
 import { XMLParser } from 'fast-xml-parser';
 import { classifyArticle } from '@/lib/ai/classifier';
 import * as cheerio from 'cheerio';
+import { extractWowheadNewsLinks } from '@/lib/scrape/wowhead';
 
 export async function POST(req: NextRequest) {
   const isAdmin = cookies().get('mh_admin')?.value === '1';
@@ -16,7 +17,17 @@ export async function POST(req: NextRequest) {
 
   const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
   const parsed = parser.parse(xml);
-  const items: any[] = parsed?.rss?.channel?.item || [];
+  let items: any[] = [...(parsed?.rss?.channel?.item || [])];
+
+  // Also scrape the Wowhead News page as a practical feed replacement
+  try {
+    const newsUrl = 'https://www.wowhead.com/news';
+    const newsRes = await fetch(newsUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    const newsHtml = await newsRes.text();
+    const links = extractWowheadNewsLinks(newsHtml, newsUrl);
+    const newsItems = links.map((link) => ({ link, title: '', description: '' }));
+    items = items.concat(newsItems);
+  } catch {}
   const svc = createServiceClient();
   const inserted: any[] = [];
   const errors: string[] = [];
@@ -111,12 +122,18 @@ export async function POST(req: NextRequest) {
   const classifyMs = Date.now() - t1;
 
   // Dedupe NA/EU duplicates: group by normalized title slug; prefer /us/ in URL when present
-  function slugifyTitle(t: string) {
-    return (t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);
+  function slugifyTitle(t: string, url?: string) {
+    const base = (t || '').trim();
+    if (base) return base.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);
+    // Fallback to last part of URL path
+    try {
+      const u = new URL(url || '');
+      return u.pathname.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 80);
+    } catch { return Math.random().toString(36).slice(2, 10); }
   }
   const byTitle = new Map<string, { url: string; title: string; description: string; severity: number; reason?: string }>();
   for (const c of candidates) {
-    const key = slugifyTitle(c.title);
+    const key = slugifyTitle(c.title, c.url);
     const prev = byTitle.get(key);
     if (!prev) {
       byTitle.set(key, c);
