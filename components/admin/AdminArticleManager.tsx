@@ -322,7 +322,7 @@ export function AdminArticleManager() {
             <div className="mt-3 text-slate-400">No submissions.</div>
           ) : (
             <ul className="mt-3 space-y-3">
-              {(showReviewed ? subs : subs.filter((s:any)=>s.status !== 'reviewed')).map((s) => (
+              {(showReviewed ? subs : subs.filter((s:any)=> s.status === 'pending')).map((s) => (
                 <li key={s.id} className="space-y-2 rounded bg-slate-900/40 p-3 ring-1 ring-white/10">
                   <div className="flex items-center justify-between">
                     <div>
