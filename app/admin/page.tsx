@@ -2,6 +2,7 @@ import { AdminArticleManager } from '@/components/admin/AdminArticleManager';
 import { AdminLogin } from '@/components/admin/AdminLogin';
 import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { PageTitle } from '@/components/PageTitle';
 
 export default function AdminPage() {
   const isAdmin = cookies().get('mh_admin')?.value === '1';
@@ -24,8 +25,9 @@ export default function AdminPage() {
   }
   return (
     <div className="pb-16">
-      <h1 className="mt-8 text-3xl font-semibold">Admin</h1>
-      <p className="mt-2 text-slate-300">Add or remove Wowhead article links. AI will suggest relevance.</p>
+      <div className="mt-8">
+        <PageTitle title="Admin" subtitle="Add or remove Wowhead article links. AI will suggest relevance." />
+      </div>
       <div className="mt-6">{isAdmin ? <AdminArticleManager /> : <AdminLogin />}</div>
     </div>
   );

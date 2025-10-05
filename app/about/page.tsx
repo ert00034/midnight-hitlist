@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import EmailObfuscatedLink from '@/components/EmailObfuscatedLink';
+import { PageTitle } from '@/components/PageTitle';
 
 export default function AboutPage() {
   return (
     <div className="pb-16">
       <main className="py-10">
-        <h1 className="text-3xl font-semibold">About</h1>
+        <PageTitle title="About" />
         <p className="mt-2 text-slate-300">
           RIP Addons is a lightweight tracker for World of Warcraft addon impacts from the Midnight API/addon changes.
           It curates Wowhead articles and surfaces addon impact severity so authors and players can quickly assess risk.

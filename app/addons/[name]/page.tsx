@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { ArticleCard, type Article } from '@/components/articles/ArticleCard';
 import Link from 'next/link';
+import { PageTitle } from '@/components/PageTitle';
 
 export default async function AddonDetailPage({ params }: { params: { name: string } }) {
   const addonName = decodeURIComponent(params.name);
@@ -39,7 +40,7 @@ export default async function AddonDetailPage({ params }: { params: { name: stri
   return (
     <div className="pb-16">
       <div className="mt-8 flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">Addon: {addonName}</h1>
+        <PageTitle title={`Addon: ${addonName}`} />
         <Link href="/addons" className="text-sky-300 hover:underline">All Addons</Link>
       </div>
       {avgSeverity !== null && (

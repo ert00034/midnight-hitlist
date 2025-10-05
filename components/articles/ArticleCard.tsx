@@ -12,6 +12,7 @@ export type Article = {
   severity: number | null;
   created_at?: string;
   impacts?: { addon_name: string; severity: number }[];
+  reactions?: { good: number; bad: number };
 };
 
 export function ArticleCard({ article }: { article: Article }) {
@@ -41,7 +42,7 @@ export function ArticleCard({ article }: { article: Article }) {
           )}
         </div>
         <div className="ml-auto shrink-0 self-stretch">
-          <ArticleReactions articleId={article.id} />
+          <ArticleReactions articleId={article.id} initialGood={article.reactions?.good ?? 0} initialBad={article.reactions?.bad ?? 0} />
         </div>
       </div>
     </div>

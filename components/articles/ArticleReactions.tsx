@@ -4,9 +4,9 @@ import { useEffect, useState, useTransition } from 'react';
 
 type Mine = 'good' | 'bad' | null;
 
-export function ArticleReactions({ articleId }: { articleId: string }) {
-  const [good, setGood] = useState(0);
-  const [bad, setBad] = useState(0);
+export function ArticleReactions({ articleId, initialGood = 0, initialBad = 0 }: { articleId: string; initialGood?: number; initialBad?: number }) {
+  const [good, setGood] = useState(initialGood);
+  const [bad, setBad] = useState(initialBad);
   const [mine, setMine] = useState<Mine>(null);
   const [justVoted, setJustVoted] = useState<Mine>(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +16,15 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`/api/reactions?articleId=${encodeURIComponent(articleId)}`, { cache: 'no-store' });
+        // If we already have initial counts, fetch only mine; otherwise, fetch full counts once
+        const mineOnly = initialGood > 0 || initialBad > 0 ? '&mineOnly=1' : '';
+        const res = await fetch(`/api/reactions?articleId=${encodeURIComponent(articleId)}${mineOnly}`, { cache: 'no-store' });
         const json = await res.json();
         if (!cancelled && !json.error) {
-          setGood(Number(json.good || 0));
-          setBad(Number(json.bad || 0));
+          if (typeof json.good === 'number' && typeof json.bad === 'number') {
+            setGood(Number(json.good || 0));
+            setBad(Number(json.bad || 0));
+          }
           setMine((json.mine as Mine) ?? null);
         }
       } catch {}
@@ -76,7 +80,12 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
   const baseBtn =
     'w-full select-none rounded-md px-2.5 py-1.5 ring-1 ring-white/10 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 hover:shadow-glow active:scale-[0.98]';
 
-  const selectedStyles = 'ring-2 ring-indigo-400/40 shadow-glow';
+  function selectedTintClass(kind: 'good' | 'bad'): string {
+    // Stronger saturation, brightness and a colored ring when selected
+    return kind === 'good'
+      ? 'saturate-150 brightness-110 ring-2 ring-emerald-400/60 text-white shadow-glow'
+      : 'saturate-150 brightness-110 ring-2 ring-rose-400/60 text-white shadow-glow';
+  }
 
   function tintClass(kind: 'good' | 'bad', count: number): string {
     // Tiered tints that intensify as counts grow
@@ -106,7 +115,7 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
           baseBtn,
           'min-h-[36px] sm:min-h-[44px] flex-1',
           tintClass('good', good),
-          mine === 'good' ? selectedStyles : '',
+          mine === 'good' ? selectedTintClass('good') : '',
           justVoted === 'good' ? 'animate-pulse' : '',
         ].join(' ')}
       >
@@ -126,7 +135,7 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
           baseBtn,
           'min-h-[36px] sm:min-h-[44px] flex-1',
           tintClass('bad', bad),
-          mine === 'bad' ? selectedStyles : '',
+          mine === 'bad' ? selectedTintClass('bad') : '',
           justVoted === 'bad' ? 'animate-pulse' : '',
         ].join(' ')}
       >
