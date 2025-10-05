@@ -25,7 +25,8 @@ Run the SQL migrations in order inside your Supabase SQL editor (or `psql`):
 
 1. `supabase/migrations/0001_init.sql`
 2. `supabase/migrations/0002_submissions.sql`
-3. `supabase/migrations/0003_safe_severity.sql`
+3. `supabase/migrations/0002_reactions.sql`
+4. `supabase/migrations/0003_safe_severity.sql`
 
 ### 3) Configure env
 Create `.env.local`:
@@ -35,6 +36,7 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key   # required for admin writes (server-only)
 ADMIN_PASSWORD=choose_a_strong_password           # for simple cookie-based admin login
+ADMIN_ACCESS_KEY=optional_gate_key                # optional: gate /admin in production
 OPENROUTER_API_KEY=your_key_optional              # enables AI classify/summarize/suggest
 OPENROUTER_MODEL=gpt-5-mini                       # default; override if desired
 OPENROUTER_BASE_URL=https://openrouter.ai/api/v1  # default; override if desired
@@ -63,6 +65,7 @@ Visit `http://localhost:3000`.
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `ADMIN_PASSWORD`
+   - `ADMIN_ACCESS_KEY` (optional; enables `/admin?key=...` gate in production)
    - `OPENROUTER_API_KEY` (optional)
    - `OPENROUTER_MODEL` (optional)
    - `OPENROUTER_BASE_URL` (optional)
@@ -103,6 +106,28 @@ All admin actions require a cookie `mh_admin=1`. Log in via `POST /api/admin/log
 ### Impacted addons feed (public)
 - `GET /api/impacted` → versioned feed with CORS, cache, and ETag; supports `HEAD` for ETag
 
+### Reactions (public)
+- `GET /api/reactions?articleId=<uuid>` → `{ good, bad, mine }` where mine is `"good" | "bad" | null`
+- `POST /api/reactions` body `{ articleId: string, reaction: 'good' | 'bad' | 'none' }`
+
+Windows PowerShell-safe cURL examples:
+```powershell
+# User-run: get reactions for an article
+curl.exe -sS -X GET http://localhost:3000/api/reactions?articleId=<ARTICLE_ID>
+
+# User-run: set reaction to good (stores mh_reactor_id cookie if missing)
+curl.exe -sS -X POST -H "Content-Type: application/json" -d "{\"articleId\":\"<ARTICLE_ID>\",\"reaction\":\"good\"}" http://localhost:3000/api/reactions
+
+# User-run: clear your reaction
+curl.exe -sS -X POST -H "Content-Type: application/json" -d "{\"articleId\":\"<ARTICLE_ID>\",\"reaction\":\"none\"}" http://localhost:3000/api/reactions
+```
+
+macOS/Linux:
+```bash
+curl -sS -X GET "http://localhost:3000/api/reactions?articleId=<ARTICLE_ID>"
+curl -sS -X POST -H "Content-Type: application/json" -d '{"articleId":"<ARTICLE_ID>","reaction":"bad"}' http://localhost:3000/api/reactions
+```
+
 ### Admin utilities
 - `POST /api/admin/login` body: `{ password }` → sets `mh_admin` cookie
 - `POST /api/admin/logout` → clears cookie
@@ -112,6 +137,11 @@ All admin actions require a cookie `mh_admin=1`. Log in via `POST /api/admin/log
 - `POST /api/admin/clear` → deletes all articles (admin)
 - `POST /api/admin/revalidate-impacts` → revalidate cache tag (admin)
 - `POST /api/ingest-wowhead-rss` (admin) body options: `{ limit, strictness: 'low'|'medium'|'high', dryRun, concurrency, selected }`
+
+#### Production admin access
+- Set `ADMIN_PASSWORD` (required) and optionally `ADMIN_ACCESS_KEY` (gates `/admin`).
+- Visit `/admin?key=<ADMIN_ACCESS_KEY>` in production to access the login UI; enter `ADMIN_PASSWORD` to receive `mh_admin=1` (8h).
+- Without a matching `?key=...` in production, `/admin` responds with 404.
 
 ### Submissions (public suggestions)
 - `POST /api/submissions` body: `{ url, title?, notes?, addons: [{ addon_name, severity }], website? }`

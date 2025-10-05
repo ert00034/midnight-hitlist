@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { AddonTag } from '@/components/AddonTag';
 import { Favicon } from '@/components/Favicon';
+import { ArticleReactions } from './ArticleReactions';
 
 export type Article = {
   id: string;
@@ -38,7 +39,9 @@ export function ArticleCard({ article }: { article: Article }) {
               </div>
             </div>
           )}
-          
+        </div>
+        <div className="ml-auto shrink-0">
+          <ArticleReactions articleId={article.id} />
         </div>
       </div>
     </div>
