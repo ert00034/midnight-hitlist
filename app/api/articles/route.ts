@@ -47,9 +47,49 @@ export async function POST(req: NextRequest) {
   const $ = cheerio.load(html);
   const title = $('meta[property="og:title"]').attr('content') || $('title').text() || url;
   const description = $('meta[name="description"]').attr('content') || $('meta[property="og:description"]').attr('content') || '';
-  const icon = $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href') || $('link[rel="apple-touch-icon"]').attr('href') || '';
-  const faviconUrl = icon ? (icon.startsWith('http') ? icon : new URL(icon, url).toString()) : new URL('/favicon.ico', url).toString();
-  const favicon = faviconUrl;
+  function ddgIcon(u: string): string {
+    try { const host = new URL(u).hostname; return `https://icons.duckduckgo.com/ip3/${host}.ico`; } catch { return ''; }
+  }
+  function parseSizeVal(sizes: string | undefined | null): number {
+    if (!sizes) return 0;
+    const m = String(sizes).match(/(\d{2,4})x(\d{2,4})/);
+    if (!m) return 0;
+    const a = parseInt(m[1] || '0', 10);
+    const b = parseInt(m[2] || '0', 10);
+    return Math.max(a || 0, b || 0);
+  }
+  function scoreIcon(rel: string, type: string | undefined, size: number): number {
+    const r = (rel || '').toLowerCase();
+    const t = (type || '').toLowerCase();
+    let score = 0;
+    if (r.includes('shortcut')) score += 2;
+    if (r.includes('icon')) score += 2;
+    if (r.includes('apple-touch')) score += 1;
+    if (t.includes('png')) score += 2;
+    if (t.includes('x-icon') || t.includes('ico') || t.includes('vnd.microsoft.icon')) score += 2;
+    if (t.includes('svg')) score += 0; // avoid preferring svg due to rendering variability
+    // prefer reasonable sizes (close to 32-64)
+    if (size >= 24 && size <= 128) score += 1;
+    if (size >= 32 && size <= 64) score += 1;
+    return score * 1000 + Math.min(512, size); // tie-break by size
+  }
+  const linkEls = $('link[rel]').toArray();
+  const iconLinks = linkEls
+    .map((el) => {
+      const rel = String($(el).attr('rel') || '');
+      if (!/icon/i.test(rel)) return null;
+      const href = String($(el).attr('href') || '').trim();
+      if (!href) return null;
+      const type = $(el).attr('type');
+      const sizes = $(el).attr('sizes');
+      const sizeVal = parseSizeVal(typeof sizes === 'string' ? sizes : undefined);
+      const abs = href.startsWith('http') ? href : new URL(href, url).toString();
+      return { abs, rel, type: type ? String(type) : '', size: sizeVal, score: scoreIcon(rel, type as any, sizeVal) };
+    })
+    .filter(Boolean) as { abs: string; rel: string; type: string; size: number; score: number }[];
+  iconLinks.sort((a, b) => b.score - a.score);
+  const pickedIcon = iconLinks.length ? iconLinks[0].abs : '';
+  const favicon = pickedIcon || ddgIcon(url) || new URL('/favicon.ico', url).toString();
 
   // AI classify relevance and severity
   let severity: number | null = null;

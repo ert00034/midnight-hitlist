@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { AddonTag } from '@/components/AddonTag';
+import { Favicon } from '@/components/Favicon';
 
 export type Article = {
   id: string;
@@ -17,11 +18,7 @@ export function ArticleCard({ article }: { article: Article }) {
   return (
     <div className="group rounded-xl bg-slate-900/40 p-5 ring-1 ring-white/10 transition hover:shadow-glow">
       <div className="flex items-start gap-4">
-        {article.favicon ? (
-          <img src={article.favicon} alt="icon" width={32} height={32} className="rounded" loading="lazy" decoding="async" referrerPolicy="no-referrer" />
-        ) : (
-          <div className="h-8 w-8 rounded bg-slate-700" />
-        )}
+        <Favicon url={article.url} src={article.favicon || undefined} size={32} className="rounded" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-3">
             <Link href={article.url} target="_blank" className="truncate text-lg font-medium" title={article.url}>

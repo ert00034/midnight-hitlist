@@ -15,7 +15,7 @@ export function Navbar() {
         </Link>
         <div className="flex items-center gap-6">
           <Link href="/articles" className="no-underline hover:no-underline">Articles</Link>
-          <Link href="/addons" className="no-underline hover:no-underline">Addons</Link>
+          <Link href="/addons" prefetch={false} className="no-underline hover:no-underline">Addons</Link>
           <Link href="/suggest" className="no-underline hover:no-underline">Suggest</Link>
           <Link href="/about" className="no-underline hover:no-underline">About</Link>
           <Link href="/admin" className="no-underline hover:no-underline">Admin</Link>

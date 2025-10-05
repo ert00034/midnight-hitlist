@@ -63,15 +63,18 @@ export async function OverallInfographic() {
       <div className="text-sm text-slate-300 mb-4">Updated every 5 minutes</div>
       <div className="grid items-start gap-6 md:grid-cols-2">
         <div className="p-2" dangerouslySetInnerHTML={{ __html: cachedSvg! }} />
-        <div className="max-h-[180px] overflow-auto">
+        <div className="max-h-[260px] overflow-y-auto pr-1" style={{ scrollbarGutter: 'stable both-edges' }}>
           <div className="text-sm text-slate-300 mb-3">Most impacted addons</div>
-          <ul className="space-y-1.5">
+          <ul className="space-y-2" aria-label="Most impacted addons">
             {cachedAddons.map((a) => (
-              <li key={a.name} className="flex items-center justify-between">
-                <Link href={`/addons/${encodeURIComponent(a.name)}`} className="truncate pr-2 hover:underline">
-                  {a.name}
+              <li key={a.name}>
+                <Link
+                  href={`/addons/${encodeURIComponent(a.name)}`}
+                  className="group flex items-center justify-between rounded-lg bg-slate-900/40 px-3 py-2 ring-1 ring-white/10 transition hover:shadow-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 no-underline hover:no-underline"
+                >
+                  <span className="truncate pr-3 font-medium text-cyan-300 group-hover:text-cyan-200">{a.name}</span>
+                  {badge(a.avg)}
                 </Link>
-                {badge(a.avg)}
               </li>
             ))}
             {cachedAddons.length === 0 && (

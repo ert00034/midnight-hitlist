@@ -139,9 +139,13 @@ export async function POST(req: NextRequest) {
 
   // Admin auto-approval: immediately promote to article and mark reviewed
   if (isAdmin) {
+    function ddgIcon(u: string): string | null {
+      try { const host = new URL(u).hostname; return `https://icons.duckduckgo.com/ip3/${host}.ico`; } catch { return null; }
+    }
+    const fallbackFavicon = ddgIcon(url);
     const { data: art, error: artErr } = await svc
       .from('articles')
-      .insert({ url, title, summary: notes, favicon: null, severity: 2 })
+      .insert({ url, title, summary: notes, favicon: fallbackFavicon, severity: 2 })
       .select('id')
       .single();
     if (artErr || !art) {
@@ -217,9 +221,13 @@ export async function PATCH(req: NextRequest) {
   const safeTitle = sanitizeText(sub.title, 200);
   const safeSummary = sanitizeText(sub.notes, 1000);
   const safeUrl = safeHttpUrl(sub.url);
+  function ddgIcon(u: string): string | null {
+    try { const host = new URL(u).hostname; return `https://icons.duckduckgo.com/ip3/${host}.ico`; } catch { return null; }
+  }
+  const fallbackFavicon = ddgIcon(safeUrl);
   const { data: art, error: artErr } = await svc
     .from('articles')
-    .insert({ url: safeUrl, title: safeTitle, summary: safeSummary, favicon: null, severity: 2 })
+    .insert({ url: safeUrl, title: safeTitle, summary: safeSummary, favicon: fallbackFavicon, severity: 2 })
     .select('id')
     .single();
   if (artErr || !art) return NextResponse.json({ error: artErr?.message || 'Failed to create article' }, { status: 500 });

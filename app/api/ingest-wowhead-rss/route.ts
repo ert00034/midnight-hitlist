@@ -155,10 +155,14 @@ export async function POST(req: NextRequest) {
     ? selected.map((s) => ({ url: s.url, title: s.title || '', summary: s.summary || '', severity: Number(s.severity || 1) }))
     : candidates.map((c) => ({ url: c.url, title: c.title, summary: c.description, severity: c.severity }));
 
+  function ddgIcon(u: string): string | null {
+    try { const host = new URL(u).hostname; return `https://icons.duckduckgo.com/ip3/${host}.ico`; } catch { return null; }
+  }
+
   await mapWithConcurrency(toInsert, Math.min(concurrency, 5), async (c) => {
     const { data, error } = await svc
       .from('articles')
-      .upsert({ url: c.url, title: c.title, summary: c.summary, favicon: '', severity: c.severity }, { onConflict: 'url' })
+      .upsert({ url: c.url, title: c.title, summary: c.summary, favicon: ddgIcon(c.url), severity: c.severity }, { onConflict: 'url' })
       .select('*')
       .single();
     if (error) errors.push(`${c.url}: ${error.message}`);

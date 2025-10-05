@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
+import EmailObfuscatedLink from '@/components/EmailObfuscatedLink';
 
 export default function AboutPage() {
   return (
@@ -13,6 +14,15 @@ export default function AboutPage() {
         </p>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
+            <h2 className="text-xl font-medium">Feedback</h2>
+            <p className="mt-3 text-slate-400">
+              Have suggestions or found an issue? Email
+              {' '}
+              <EmailObfuscatedLink />
+            </p>
+          </section>
+
           <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
             <h2 className="text-xl font-medium">Links</h2>
             <ul className="mt-3 space-y-2">
