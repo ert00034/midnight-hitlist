@@ -47,4 +47,10 @@ a {
   @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-white/10;
 }
 
+/* Ensure gradient never tiles and fills viewport on all devices */
+body {
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 

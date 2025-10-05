@@ -26,6 +26,7 @@ export function AdminArticleManager() {
   const [subs, setSubs] = useState<any[]>([]);
   const [subsLoading, setSubsLoading] = useState(false);
   const [showReviewed, setShowReviewed] = useState(false);
+  const [rssLoading, setRssLoading] = useState(false);
 
   const isTrustedUrl = (url: string): boolean => {
     try {
@@ -134,6 +135,8 @@ export function AdminArticleManager() {
 
   const ingestRss = async () => {
     setBusy(true);
+    setRssLoading(true);
+    setStatusMsg('Loading RSS preview...');
     const r = await fetch('/api/ingest-wowhead-rss', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -152,6 +155,7 @@ export function AdminArticleManager() {
     } else {
       setStatusMsg('RSS preview returned no candidates.');
     }
+    setRssLoading(false);
     setBusy(false);
   };
 
@@ -229,7 +233,16 @@ export function AdminArticleManager() {
                 <option value="high">High</option>
               </select>
             </div>
-            <button onClick={ingestRss} disabled={busy} className="rounded bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50">Preview RSS</button>
+            <button onClick={ingestRss} disabled={busy} aria-busy={rssLoading} className="rounded bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50">
+              {rssLoading ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-transparent"></span>
+                  <span>Previewing...</span>
+                </span>
+              ) : (
+                'Preview RSS'
+              )}
+            </button>
             <button onClick={async ()=>{ setBusy(true); await fetch('/api/admin/revalidate-impacts', { method: 'POST' }); setBusy(false); }} disabled={busy} className="rounded bg-emerald-700 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50">Refresh Addons</button>
             {rssPreview && rssPreview.length > 0 && (
               <button onClick={confirmRss} disabled={busy} className="rounded bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-400 disabled:opacity-50">Confirm Insert</button>

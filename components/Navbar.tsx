@@ -5,8 +5,8 @@ export function Navbar() {
   const isAdmin = cookies().get('mh_admin')?.value === '1';
   const showAdminLink = process.env.NODE_ENV !== 'production' || isAdmin;
   return (
-    <nav className="sticky top-0 z-50 mb-4 relative">
-      <div className="pointer-events-none absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 border-b border-white/10 bg-[#0b1020]/70 backdrop-blur"></div>
+    <nav className="fixed top-0 inset-x-0 z-50">
+      <div className="pointer-events-none absolute inset-0 border-b border-white/10 bg-[#0b1020]/70 backdrop-blur"></div>
       {/* Right fade hint for horizontal scroll */}
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0b1020] to-transparent"></div>
       <div className="relative z-10 mx-auto flex max-w-6xl items-center px-4 py-3">

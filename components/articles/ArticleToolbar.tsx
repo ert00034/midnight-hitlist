@@ -19,13 +19,13 @@ export function ArticleToolbar() {
   };
 
   return (
-    <div className="mt-4 flex items-center justify-between">
+    <div className="mt-4 flex items-center justify-between gap-3">
       <div className="text-sm text-slate-300">
         Showing: {recommendedOnly ? 'Recommended' : 'All'}
       </div>
       <button
         onClick={toggle}
-        className="rounded bg-slate-800 px-3 py-1.5 text-sm ring-1 ring-white/10 hover:bg-slate-700"
+        className="shrink-0 rounded bg-slate-800 px-3 py-1.5 text-sm ring-1 ring-white/10 hover:bg-slate-700"
       >
         {recommendedOnly ? 'Show All' : 'Show Recommended'}
       </button>

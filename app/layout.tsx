@@ -12,9 +12,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="h-full">
       <body className="min-h-screen overflow-x-hidden bg-[#0b1020] text-slate-100">
-        <div className="fixed inset-0 -z-10 bg-[#0b1020] bg-arcane-gradient bg-no-repeat"></div>
+        <div className="fixed inset-0 -z-10 bg-[#0b1020] bg-arcane-gradient bg-no-repeat bg-fixed"></div>
         <Navbar />
-        <div className="mx-auto max-w-6xl px-4">
+        <div className="pt-14 mx-auto max-w-6xl px-4">
           {children}
         </div>
       </body>

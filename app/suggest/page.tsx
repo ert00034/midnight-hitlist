@@ -132,7 +132,7 @@ export default function SuggestPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="block text-sm">Addons and severity</label>
-            <button type="button" onClick={addRow} className="rounded bg-cyan-600 px-3 py-1.5 text-sm hover:bg-cyan-500">Add addon</button>
+            <button type="button" onClick={addRow} className="rounded bg-cyan-600 px-3 py-1.5 text-sm hover:bg-cyan-500">Add another addon</button>
           </div>
           <div className="space-y-2">
             {addons.map((a, i) => (

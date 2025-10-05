@@ -34,7 +34,8 @@ const config: Config = {
         glow: '0 0 30px rgba(99, 102, 241, 0.35)',
       },
       backgroundImage: {
-        'arcane-gradient': 'radial-gradient(1200px 800px at 100% -10%, rgba(99, 102, 241, 0.18), transparent 60%), radial-gradient(1000px 600px at -10% 120%, rgba(56, 189, 248, 0.18), transparent 60%)'
+        // Responsive, non-repeating corner glows that scale with viewport
+        'arcane-gradient': 'radial-gradient(100% 60% at 100% 0%, rgba(99, 102, 241, 0.18), transparent 60%), radial-gradient(100% 60% at 0% 100%, rgba(56, 189, 248, 0.18), transparent 60%)'
       }
     },
   },
