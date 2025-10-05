@@ -15,7 +15,7 @@ export default function AboutPage() {
           <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
             <h2 className="text-xl font-medium">Feedback</h2>
             <p className="mt-3 text-slate-400">
-              Have suggestions or found an issue? Email
+              Have suggestions or found an issue for this website or the addon? Email
               {' '}
               <EmailObfuscatedLink className="whitespace-nowrap text-sky-300" />
             </p>
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 Extract to your WoW folder so you have <code>Interface/AddOns/RipAddons/</code>.
               </li>
               <li>
-                In-game, run <code>/ripaddons scan</code> (or use the keybinding: RIP Addons: Toggle).
+                In-game, run <code>/ripaddons</code> to print to chat or <code>/ripaddons show</code> to open a window.
               </li>
             </ul>
           </section>
@@ -76,7 +76,7 @@ export default function AboutPage() {
           <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
             <h2 className="text-xl font-medium">Tech & data</h2>
             <p className="mt-3 text-slate-400">
-              Built with Next.js 14, TypeScript, Tailwind, and Supabase. Public read access; admin writes via service role on server routes.
+              Built with Next.js 14, TypeScript, Tailwind, and Supabase.
               External links attribute to their sources; we store only metadata and do not copy full content.
             </p>
           </section>
@@ -84,8 +84,8 @@ export default function AboutPage() {
           <section className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition md:col-span-2">
             <h2 className="text-xl font-medium">Attribution & disclaimer</h2>
             <p className="mt-3 text-slate-400">
-              This project is unofficial and not affiliated with Blizzard Entertainment. Wowhead content remains the property of its owners;
-              links open in new tabs to the original articles.
+              This project is unofficial and not affiliated with Blizzard Entertainment. Wowhead and other content remains the property of their owners;
+              links open in new tabs to the original content.
             </p>
           </section>
         </div>
