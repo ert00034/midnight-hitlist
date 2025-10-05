@@ -19,7 +19,7 @@ export default function AboutPage() {
             <p className="mt-3 text-slate-400">
               Have suggestions or found an issue? Email
               {' '}
-              <EmailObfuscatedLink />
+              <EmailObfuscatedLink className="whitespace-nowrap text-sky-300 hover:underline" />
             </p>
           </section>
 

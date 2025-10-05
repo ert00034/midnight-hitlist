@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
-import { OverallInfographic } from '@/components/home/OverallInfographic';
+import { MostImpactedGrid } from '@/components/home/MostImpactedGrid';
 
 export default function HomePage() {
   return (
@@ -24,7 +24,7 @@ export default function HomePage() {
         </Link>
       </section>
       <div className="mt-8">
-        <OverallInfographic />
+        <MostImpactedGrid />
       </div>
     </div>
   );
