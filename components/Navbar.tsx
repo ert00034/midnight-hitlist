@@ -13,9 +13,10 @@ export function Navbar() {
         <Link
           href="/"
           className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-lg font-semibold tracking-wide text-slate-100 no-underline ring-1 ring-transparent transition hover:bg-white/5 hover:text-slate-100 hover:no-underline hover:ring-white/15 hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 active:translate-y-px"
+          aria-label="RIP Addons home"
         >
           <span aria-hidden="true">💀</span>
-          <span>RIP Addons</span>
+          <span className="hidden sm:inline">RIP Addons</span>
         </Link>
         <div className="ml-4 flex-1 min-w-0">
           <div className="flex items-center gap-6 md:justify-end overflow-x-auto whitespace-nowrap [-webkit-overflow-scrolling:touch] overscroll-x-contain scrollbar-none pr-6">
