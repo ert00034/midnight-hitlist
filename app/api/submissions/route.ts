@@ -86,6 +86,8 @@ export async function POST(req: NextRequest) {
     severity: Math.max(1, Math.min(5, a.severity | 0)),
   })).filter((a) => a.addon_name.length > 0);
 
+  const isAdmin = cookies().get('mh_admin')?.value === '1';
+
   // Simple anti-spam per IP hash
   const ua = req.headers.get('user-agent');
   const ip = getClientIp(req);
@@ -95,24 +97,26 @@ export async function POST(req: NextRequest) {
   const fifteenMinAgo = new Date(now - 15 * 60 * 1000).toISOString();
   const dayAgo = new Date(now - 24 * 60 * 60 * 1000).toISOString();
 
-  // 3 per 15 minutes
-  const recent = await svc
-    .from('submissions')
-    .select('id', { count: 'exact', head: true })
-    .eq('ip_hash', ipHash)
-    .gt('created_at', fifteenMinAgo);
-  if ((recent.count || 0) >= 3) {
-    return NextResponse.json({ error: 'Too many submissions. Try again later.' }, { status: 429 });
-  }
+  if (!isAdmin) {
+    // 3 per 15 minutes
+    const recent = await svc
+      .from('submissions')
+      .select('id', { count: 'exact', head: true })
+      .eq('ip_hash', ipHash)
+      .gt('created_at', fifteenMinAgo);
+    if ((recent.count || 0) >= 3) {
+      return NextResponse.json({ error: 'Too many submissions. Try again later.' }, { status: 429 });
+    }
 
-  // 20 per day safeguard
-  const daily = await svc
-    .from('submissions')
-    .select('id', { count: 'exact', head: true })
-    .eq('ip_hash', ipHash)
-    .gt('created_at', dayAgo);
-  if ((daily.count || 0) >= 20) {
-    return NextResponse.json({ error: 'Daily submission limit reached.' }, { status: 429 });
+    // 20 per day safeguard
+    const daily = await svc
+      .from('submissions')
+      .select('id', { count: 'exact', head: true })
+      .eq('ip_hash', ipHash)
+      .gt('created_at', dayAgo);
+    if ((daily.count || 0) >= 20) {
+      return NextResponse.json({ error: 'Daily submission limit reached.' }, { status: 429 });
+    }
   }
 
   // Insert submission
@@ -131,6 +135,26 @@ export async function POST(req: NextRequest) {
   if (impErr) {
     // Do not expose details; keep simple
     return NextResponse.json({ error: 'Saved, but failed to record addons' }, { status: 202 });
+  }
+
+  // Admin auto-approval: immediately promote to article and mark reviewed
+  if (isAdmin) {
+    const { data: art, error: artErr } = await svc
+      .from('articles')
+      .insert({ url, title, summary: notes, favicon: null, severity: 2 })
+      .select('id')
+      .single();
+    if (artErr || !art) {
+      return NextResponse.json({ error: artErr?.message || 'Failed to create article' }, { status: 500 });
+    }
+    const articleImpacts = addons.map((a) => ({ article_id: art.id, addon_name: a.addon_name, severity: a.severity }));
+    if (articleImpacts.length) {
+      const { error: impErr2 } = await svc.from('article_addon_impacts').upsert(articleImpacts);
+      if (impErr2) return NextResponse.json({ error: impErr2.message }, { status: 500 });
+    }
+    await svc.from('submissions').update({ status: 'reviewed' }).eq('id', submission.id);
+    try { revalidateTag('overall-impacts'); } catch {}
+    return NextResponse.json({ ok: true, article_id: art.id, autoApproved: true });
   }
 
   return NextResponse.json({ ok: true });
