@@ -7,6 +7,8 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 mb-4 relative">
       <div className="pointer-events-none absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 border-b border-white/10 bg-[#0b1020]/70 backdrop-blur"></div>
+      {/* Right fade hint for horizontal scroll */}
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0b1020] to-transparent"></div>
       <div className="relative z-10 mx-auto flex max-w-6xl items-center px-4 py-3">
         <Link
           href="/"
@@ -16,7 +18,7 @@ export function Navbar() {
           <span>RIP Addons</span>
         </Link>
         <div className="ml-4 flex-1 min-w-0">
-          <div className="flex items-center gap-6 md:justify-end overflow-x-auto whitespace-nowrap [-webkit-overflow-scrolling:touch]">
+          <div className="flex items-center gap-6 md:justify-end overflow-x-auto whitespace-nowrap [-webkit-overflow-scrolling:touch] overscroll-x-contain scrollbar-none pr-6">
             <Link href="/articles" className="no-underline hover:no-underline">Articles</Link>
             <Link href="/addons" prefetch={false} className="no-underline hover:no-underline">Addons</Link>
             <Link href="/suggest" className="no-underline hover:no-underline">Suggest</Link>

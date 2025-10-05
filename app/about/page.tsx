@@ -1,11 +1,9 @@
 import Link from 'next/link';
-import { Navbar } from '@/components/Navbar';
 import EmailObfuscatedLink from '@/components/EmailObfuscatedLink';
 
 export default function AboutPage() {
   return (
     <div className="pb-16">
-      <Navbar />
       <main className="py-10">
         <h1 className="text-3xl font-semibold">About</h1>
         <p className="mt-2 text-slate-300">
@@ -19,7 +17,7 @@ export default function AboutPage() {
             <p className="mt-3 text-slate-400">
               Have suggestions or found an issue? Email
               {' '}
-              <EmailObfuscatedLink className="whitespace-nowrap text-sky-300 hover:underline" />
+              <EmailObfuscatedLink className="whitespace-nowrap text-sky-300" />
             </p>
           </section>
 
@@ -33,7 +31,17 @@ export default function AboutPage() {
                   rel="noopener noreferrer"
                   className="text-sky-300 hover:underline"
                 >
-                  GitHub repository
+                  Contribute on GitHub!
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://buymeacoffee.com/ripaddons"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sky-300 hover:underline"
+                >
+                  Support on Buy Me a Coffee
                 </Link>
               </li>
             </ul>

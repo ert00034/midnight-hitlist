@@ -1,11 +1,9 @@
 import Link from 'next/link';
-import { Navbar } from '@/components/Navbar';
 import { MostImpactedGrid } from '@/components/home/MostImpactedGrid';
 
 export default function HomePage() {
   return (
     <div className="pb-16">
-      <Navbar />
       <header className="py-10">
         <h1 className="text-4xl font-semibold tracking-tight">RIP Addons</h1>
         <p className="mt-2 text-slate-300">

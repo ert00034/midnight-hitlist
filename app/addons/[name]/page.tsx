@@ -1,4 +1,3 @@
-import { Navbar } from '@/components/Navbar';
 import { createClient } from '@/lib/supabase/server';
 import { ArticleCard, type Article } from '@/components/articles/ArticleCard';
 import Link from 'next/link';
@@ -16,7 +15,6 @@ export default async function AddonDetailPage({ params }: { params: { name: stri
   if (error) {
     return (
       <div className="pb-16">
-        <Navbar />
         <div className="mt-8 text-red-300">Failed to load addon details.</div>
       </div>
     );
@@ -40,7 +38,6 @@ export default async function AddonDetailPage({ params }: { params: { name: stri
 
   return (
     <div className="pb-16">
-      <Navbar />
       <div className="mt-8 flex items-center justify-between">
         <h1 className="text-3xl font-semibold">Addon: {addonName}</h1>
         <Link href="/addons" className="text-sky-300 hover:underline">All Addons</Link>

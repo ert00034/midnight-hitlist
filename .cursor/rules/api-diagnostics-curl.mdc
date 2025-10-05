@@ -28,7 +28,7 @@ curl -sS -b cookies.txt -X GET http://localhost:3000/api/admin/debug
 
 ```bash
 # User-run: ingest Wowhead (admin-only), then fetch articles
-curl -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead
+curl -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead-rss
 curl -sS -X GET http://localhost:3000/api/articles
 ```
 

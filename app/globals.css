@@ -10,6 +10,35 @@ html, body {
   height: 100%;
 }
 
+/* Improve mobile UX */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent long-press callout on links/images on iOS */
+*, *::before, *::after {
+  -webkit-touch-callout: none;
+}
+
+/* Smooth scrolling and momentum for horizontal strips */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Reduce hover-only effects on touch (kept for keyboard/mouse) */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:shadow-glow:hover {
+    box-shadow: none;
+  }
+  .hover\:bg-white\/5:hover {
+    background-color: transparent;
+  }
+}
+
 a {
   @apply text-sky-300 hover:text-sky-200 underline-offset-2 hover:underline;
 }

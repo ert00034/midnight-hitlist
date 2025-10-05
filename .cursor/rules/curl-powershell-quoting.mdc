@@ -29,7 +29,7 @@ curl.exe -sS -b cookies.txt -X POST http://localhost:3000/api/admin/seed
 curl.exe -sS -X GET http://localhost:3000/api/articles
 
 # Ingest Wowhead
-curl.exe -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead
+curl.exe -sS -b cookies.txt -X POST http://localhost:3000/api/ingest-wowhead-rss
 ```
 
 Bash/macOS/Linux:

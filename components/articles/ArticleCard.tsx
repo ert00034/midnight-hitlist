@@ -16,12 +16,12 @@ export type Article = {
 export function ArticleCard({ article }: { article: Article }) {
   const severity = article.severity ?? 1;
   return (
-    <div className="group rounded-xl bg-slate-900/40 p-5 ring-1 ring-white/10 transition hover:shadow-glow">
+    <div className="group rounded-xl bg-slate-900/40 p-5 ring-1 ring-white/10 transition hover:shadow-glow touch-manipulation">
       <div className="flex items-start gap-4">
         <Favicon url={article.url} src={article.favicon || undefined} size={32} className="rounded" />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 overflow-hidden">
           <div className="flex items-center gap-3">
-            <Link href={article.url} target="_blank" className="truncate text-lg font-medium" title={article.url}>
+            <Link href={article.url} target="_blank" className="truncate text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 rounded" title={article.url}>
               {article.title || article.url}
             </Link>
           </div>

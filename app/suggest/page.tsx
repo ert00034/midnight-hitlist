@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { Navbar } from "@/components/Navbar";
 
 type Addon = { addon_name: string; severity: number };
 
@@ -78,7 +77,6 @@ export default function SuggestPage() {
 
   return (
     <div className="pb-16">
-      <Navbar />
       <div className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold">Suggest an article or video</h1>
       <p className="mb-6 text-sm text-white/70">Share links about addons impacted by patch changes. Include which addons and how severe the impact is.</p>

@@ -1,0 +1,31 @@
+---
+alwaysApply: true
+---
+# README Maintenance Guide
+
+Keep `README.md` aligned with the codebase. When endpoints, env vars, migrations, or flows change, update the README sections below accordingly.
+
+- Env vars in `.env.local` should mirror reads from code. Source of truth:
+  - [lib/supabase/server.ts](mdc:lib/supabase/server.ts)
+  - [lib/supabase/serviceRole.ts](mdc:lib/supabase/serviceRole.ts)
+  - [lib/ai/classifier.ts](mdc:lib/ai/classifier.ts), [lib/ai/impacts.ts](mdc:lib/ai/impacts.ts), [lib/ai/summarizer.ts](mdc:lib/ai/summarizer.ts)
+  - [app/sitemap.ts](mdc:app/sitemap.ts), [app/robots.ts](mdc:app/robots.ts)
+  - [components/EmailObfuscatedLink.tsx](mdc:components/EmailObfuscatedLink.tsx)
+  - [app/api/submissions/route.ts](mdc:app/api/submissions/route.ts)
+
+- Database migrations list must include all files under `supabase/migrations/` in order.
+
+- API Overview should include current routes under `app/api/` with concise method and body notes. In particular:
+  - Articles: [app/api/articles/route.ts](mdc:app/api/articles/route.ts)
+  - Article impacts and suggest: [app/api/article-impacts/route.ts](mdc:app/api/article-impacts/route.ts), [app/api/article-impacts/suggest/route.ts](mdc:app/api/article-impacts/suggest/route.ts)
+  - Overall impacts: [app/api/overall-impacts/route.ts](mdc:app/api/overall-impacts/route.ts)
+  - Impacted feed: [app/api/impacted/route.ts](mdc:app/api/impacted/route.ts)
+  - Submissions: [app/api/submissions/route.ts](mdc:app/api/submissions/route.ts)
+  - Admin utilities: login/logout/me/debug/seed/clear/revalidate/ingest-wowhead-rss under [app/api/admin/*](mdc:app/api/admin/login/route.ts)
+
+- Quick admin cURL examples should follow the Windows PowerShell-safe guidance and use `/api/ingest-wowhead-rss`.
+
+- Severity mapping in the impacted feed docs should reflect logic in [lib/severity.ts](mdc:lib/severity.ts).
+
+Whenever any of the above change, update `README.md` in the corresponding sections.
+
