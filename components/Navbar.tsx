@@ -1,7 +1,9 @@
-"use client";
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 
 export function Navbar() {
+  const isAdmin = cookies().get('mh_admin')?.value === '1';
+  const showAdminLink = process.env.NODE_ENV !== 'production' || isAdmin;
   return (
     <nav className="sticky top-0 z-50 mb-4 relative">
       <div className="pointer-events-none absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 border-b border-white/10 bg-[#0b1020]/70 backdrop-blur"></div>
@@ -19,7 +21,9 @@ export function Navbar() {
             <Link href="/addons" prefetch={false} className="no-underline hover:no-underline">Addons</Link>
             <Link href="/suggest" className="no-underline hover:no-underline">Suggest</Link>
             <Link href="/about" className="no-underline hover:no-underline">About</Link>
-            <Link href="/admin" className="no-underline hover:no-underline">Admin</Link>
+            {showAdminLink && (
+              <Link href="/admin" className="no-underline hover:no-underline">Admin</Link>
+            )}
           </div>
         </div>
       </div>
