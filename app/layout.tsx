@@ -5,7 +5,7 @@ import { Navbar } from '@/components/Navbar';
 
 export const metadata: Metadata = {
   title: 'RIP Addons',
-  description: 'Track WoW addon impacts from Midnight API changes, with Wowhead articles.',
+  description: 'Track WoW addon impacts from Midnight API changes, with community contributed sources.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
