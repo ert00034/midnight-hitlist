@@ -16,7 +16,7 @@ export default function HomePage() {
       <section className="grid gap-6 md:grid-cols-2">
         <Link href="/articles" className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
           <h2 className="text-2xl font-medium">Articles</h2>
-          <p className="mt-2 text-slate-400">Browse articles from Wowhead classified by relevance and severity.</p>
+          <p className="mt-2 text-slate-400">Browse articles from the community, classified by relevance and severity.</p>
         </Link>
         <Link href="/addons" className="rounded-xl bg-slate-900/40 p-6 ring-1 ring-white/10 hover:shadow-glow transition">
           <h2 className="text-2xl font-medium">Addons</h2>

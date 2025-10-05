@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-screen bg-[#0b1020] bg-arcane-gradient bg-no-repeat text-slate-100">
+      <body className="min-h-screen overflow-x-hidden bg-[#0b1020] bg-arcane-gradient bg-no-repeat text-slate-100">
         <div className="mx-auto max-w-6xl px-4">
           {children}
         </div>
