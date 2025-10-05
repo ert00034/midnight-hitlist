@@ -40,7 +40,7 @@ export function ArticleCard({ article }: { article: Article }) {
             </div>
           )}
         </div>
-        <div className="ml-auto shrink-0">
+        <div className="ml-auto shrink-0 self-stretch">
           <ArticleReactions articleId={article.id} />
         </div>
       </div>

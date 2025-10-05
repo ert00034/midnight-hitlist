@@ -9,6 +9,7 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
   const [bad, setBad] = useState(0);
   const [mine, setMine] = useState<Mine>(null);
   const [justVoted, setJustVoted] = useState<Mine>(null);
+  const [loading, setLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -23,6 +24,9 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
           setMine((json.mine as Mine) ?? null);
         }
       } catch {}
+      finally {
+        if (!cancelled) setLoading(false);
+      }
     })();
     return () => {
       cancelled = true;
@@ -74,21 +78,45 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
 
   const selectedStyles = 'ring-2 ring-indigo-400/40 shadow-glow';
 
+  function tintClass(kind: 'good' | 'bad', count: number): string {
+    // Tiered tints that intensify as counts grow
+    if (!count || count <= 0) return 'bg-slate-800/60 hover:bg-slate-800 text-slate-200';
+    const goodTiers = [
+      'bg-emerald-900/30 hover:bg-emerald-900/40 text-slate-200',
+      'bg-emerald-900/40 hover:bg-emerald-900/50 text-slate-200',
+      'bg-emerald-900/50 hover:bg-emerald-900/60 text-slate-200',
+      'bg-emerald-900/60 hover:bg-emerald-900/70 text-slate-200',
+    ];
+    const badTiers = [
+      'bg-rose-900/30 hover:bg-rose-900/40 text-slate-200',
+      'bg-rose-900/40 hover:bg-rose-900/50 text-slate-200',
+      'bg-rose-900/50 hover:bg-rose-900/60 text-slate-200',
+      'bg-rose-900/60 hover:bg-rose-900/70 text-slate-200',
+    ];
+    const idx = count >= 11 ? 3 : count >= 6 ? 2 : count >= 3 ? 1 : 0;
+    return kind === 'good' ? goodTiers[idx] : badTiers[idx];
+  }
+
   return (
-    <div className="flex w-24 sm:w-28 flex-col gap-2 text-sm">
+    <div className="flex w-24 sm:w-28 flex-col gap-2 text-sm h-full justify-center">
       <button
         aria-pressed={mine === 'good'}
         onClick={() => vote('good')}
         className={[
           baseBtn,
-          'bg-slate-800/60 hover:bg-slate-800 text-slate-200',
+          'min-h-[36px] sm:min-h-[44px] flex-1',
+          tintClass('good', good),
           mine === 'good' ? selectedStyles : '',
           justVoted === 'good' ? 'animate-pulse' : '',
         ].join(' ')}
       >
         <span className="inline-flex items-center justify-center gap-1.5">
-          <span aria-hidden="true">🙂</span>
-          <span className="tabular-nums text-slate-300">{good}</span>
+          <span aria-hidden="true" className="text-2xl sm:text-3xl leading-none">🙂</span>
+          {loading ? (
+            <span className="h-5 sm:h-6 w-8 sm:w-10 rounded bg-white/10 animate-pulse" />
+          ) : (
+            <span className="tabular-nums text-slate-200 text-base sm:text-lg">{good}</span>
+          )}
         </span>
       </button>
       <button
@@ -96,14 +124,19 @@ export function ArticleReactions({ articleId }: { articleId: string }) {
         onClick={() => vote('bad')}
         className={[
           baseBtn,
-          'bg-slate-800/60 hover:bg-slate-800 text-slate-200',
+          'min-h-[36px] sm:min-h-[44px] flex-1',
+          tintClass('bad', bad),
           mine === 'bad' ? selectedStyles : '',
           justVoted === 'bad' ? 'animate-pulse' : '',
         ].join(' ')}
       >
         <span className="inline-flex items-center justify-center gap-1.5">
-          <span aria-hidden="true">☹️</span>
-          <span className="tabular-nums text-slate-300">{bad}</span>
+          <span aria-hidden="true" className="text-2xl sm:text-3xl leading-none">☹️</span>
+          {loading ? (
+            <span className="h-5 sm:h-6 w-8 sm:w-10 rounded bg-white/10 animate-pulse" />
+          ) : (
+            <span className="tabular-nums text-slate-200 text-base sm:text-lg">{bad}</span>
+          )}
         </span>
       </button>
     </div>
