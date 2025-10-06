@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+---
+### Prefer Browser-Based Testing
+
+- When providing testing instructions for API routes or admin flows in this project, prefer steps that can be executed directly in the browser over command-line cURL.
+- Use URLs under `/admin` when possible, and suggest using the browser devtools Network tab for verification.
+- When authentication is required, instruct to visit `/admin`, log in with the admin password, then trigger admin endpoints by navigating to links or using the devtools Console `fetch` calls.
+- Only fall back to cURL when browser testing is not feasible.
+
+References for routes:
+- Admin login: [app/api/admin/login/route.ts](mdc:app/api/admin/login/route.ts)

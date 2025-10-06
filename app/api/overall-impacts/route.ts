@@ -22,7 +22,7 @@ export async function GET() {
   }
   const impacts = Array.from(agg.entries()).map(([addon_name, severities]) => ({
     addon_name,
-    severity: severities.reduce((a, b) => a + b, 0) / Math.max(1, severities.length)
+    severity: severities.reduce((a, b) => a + b, 0) / Math.max(1, severities.length),
   }));
   return NextResponse.json({ impacts });
 }

@@ -9,8 +9,9 @@ export default function HomePage() {
         <PageTitle title="RIP Addons" subtitle={
           (
             <>
-              Information collected from the community on addons impacted by the changes to World of Warcrafting coming in the Midnight expansion.{' '}
-              <Link href="/suggest" className="underline">Suggest a link</Link> if you have news not listed here.
+              Information here is from the community on addons impacted by the changes to World of Warcrafting coming in the Midnight expansion.
+              <br />
+              Please <Link href="/suggest" className="underline">suggest a link</Link> if you have something to share!
             </>
           ) as any
         } />

@@ -74,6 +74,7 @@ Visit `http://localhost:3000`.
 ### Notes
 - For admin write operations from API routes, configure a Supabase Service Role key and perform writes server-side using it or via edge functions; current setup expects running trusted environment on server routes. For simple setups, you can grant writes temporarily or run admin tasks manually.
 - External fetching/scraping must respect Wowhead terms; we only store links/metadata and do not copy content.
+ - To enable CurseForge integration, set `CURSEFORGE_API_KEY` (server-only). We only use the Mods endpoints to read `logo.thumbnailUrl`.
 
 ---
 
@@ -136,6 +137,7 @@ curl -sS -X POST -H "Content-Type: application/json" -d '{"articleId":"<ARTICLE_
 - `POST /api/admin/seed` → inserts a test article (admin)
 - `POST /api/admin/clear` → deletes all articles (admin)
 - `POST /api/admin/revalidate-impacts` → revalidate cache tag (admin)
+ 
 - `POST /api/ingest-wowhead-rss` (admin) body options: `{ limit, strictness: 'low'|'medium'|'high', dryRun, concurrency, selected }`
 
 #### Production admin access

@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+### SVG Handling Guidance
+
+- Do NOT open or tool-call `.svg` assets directly during exploration; treat them as opaque static files.
+- Refer to public asset paths instead of importing SVGs when creating fallbacks in components.
+- If you must reference an icon, prefer a stable path under `public/` (e.g., `/icons/arrow-gray-32.png`) rather than reading the SVG content.
+
+Related files to be aware of:
+- Favicon logic: [components/Favicon.tsx](mdc:components/Favicon.tsx)
